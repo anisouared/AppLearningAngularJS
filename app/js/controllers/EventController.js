@@ -1,7 +1,7 @@
 'use strict';
 
 eventsApp.controller('EventController',
-    function EventController($scope, eventData, $log) {
+    function EventController($scope, eventData, $log, $anchorScroll) {
         $scope.buttonDisabled = true;
         $scope.snippet = '<span style="color:red">Hi there</span>';
         $scope.boolValue = true;
@@ -12,11 +12,19 @@ eventsApp.controller('EventController',
         //eventData.getEvent(function(event) {
         //    $scope.event = event;
         //});
+
+        //using $http service 
+        //eventData.getEvent()
+        //    .success(function(event) { $scope.event = event; })
+        //    .error(function (data, status, headers, config) {
+        //        $log.warn(data, status, headers(), config);
+        //    })
+
         eventData.getEvent()
-            .success(function(event) { $scope.event = event; })
-            .error(function (data, status, headers, config) {
-                $log.warn(data, status, headers(), config);
-            })
+            .$promise
+            .then(function(event) { $scope.event = event; console.log(event); })
+            .catch(function(response) { $console.log(response);}
+            );
 
         $scope.upVoteSession = function(session) {
             session.upVoteCount++;
@@ -24,6 +32,10 @@ eventsApp.controller('EventController',
 
         $scope.downVoteSession = function(session) {
             session.upVoteCount--;
+        }
+
+        $scope.scrollToSession = function() {
+            $anchorScroll();
         }
     }
 );
